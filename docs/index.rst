@@ -3,6 +3,7 @@
 
 * Use as any other widget
 
+CalendarWidget example
 
     from kivy.app import App
     from KivyCalendar import CalendarWidget
@@ -14,6 +15,7 @@
     
     MyApp().run()
 
+DatePicker example
 
     from kivy.app import App
     from KivyCalendar import DatePicker
