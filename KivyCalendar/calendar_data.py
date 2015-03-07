@@ -17,12 +17,17 @@ from locale import getdefaultlocale
 def get_month_names():
     """ Return list with months names """
     
-    result = []    
-    with TimeEncoding("%s.%s" % getdefaultlocale()) as time_enc:
-        for i in range(1, 13):
-            result.append(month_name[i].decode(time_enc))
-            
+    result = []
+    # If it possible get months names in system language
+    try:
+        with TimeEncoding("%s.%s" % getdefaultlocale()) as time_enc:
+            for i in range(1, 13):
+                result.append(month_name[i].decode(time_enc))
+                
         return result
+    
+    except:
+        return get_month_names_eng()
         
 def get_month_names_eng():
     """ Return list with months names in english """
@@ -34,14 +39,19 @@ def get_month_names_eng():
     return result
 
 def get_days_abbrs():
-    """ Return list with days abbreviationS """
+    """ Return list with days abbreviations """
     
     result = []
-    with TimeEncoding("%s.%s" % getdefaultlocale()) as time_enc:
+    # If it possible get days abbrs in system language
+    try:
+        with TimeEncoding("%s.%s" % getdefaultlocale()) as time_enc:
+            for i in range(7):
+                result.append(day_abbr[i].decode(time_enc))    
+    except:
         for i in range(7):
-            result.append(day_abbr[i].decode(time_enc))
+            result.append(day_abbr[i])
             
-        return result
+    return result
 
 def calc_quarter(y, m):
     """ Calculate previous and next month """
