@@ -63,8 +63,8 @@ class DatePicker(TextInput):
     Date picker is a textinput, if it focused shows popup with calendar
     """
     
-    def __init__(self):
-        super(DatePicker, self).__init__()
+    def __init__(self, *args, **kwargs):
+        super(DatePicker, self).__init__(*args, **kwargs)
         self.init_ui()        
         
     def init_ui(self):
@@ -94,8 +94,8 @@ class DatePicker(TextInput):
 class CalendarWidget(RelativeLayout):
     """ Basic calendar widget """
     
-    def __init__(self, as_popup=False):
-        super(CalendarWidget, self).__init__()
+    def __init__(self, as_popup=False, *args, **kwargs):
+        super(CalendarWidget, self).__init__(*args, **kwargs)
         
         self.as_popup = as_popup     
         self.prepare_data()     
