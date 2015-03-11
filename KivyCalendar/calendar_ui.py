@@ -63,15 +63,18 @@ class DatePicker(TextInput):
     Date picker is a textinput, if it focused shows popup with calendar
     """
     
-    def __init__(self, *args, **kwargs):
+    def __init__(self, touch_switch=False, *args, **kwargs):
         super(DatePicker, self).__init__(*args, **kwargs)
-        self.init_ui()        
+        
+        self.touch_switch = touch_switch
+        self.init_ui() 
         
     def init_ui(self):
         
         self.text = cal_data.today_date()
         # Calendar
-        self.cal = CalendarWidget(as_popup=True)
+        self.cal = CalendarWidget(as_popup=True, 
+                                  touch_switch=self.touch_switch)
         # Popup
         self.popup = Popup(content=self.cal, on_dismiss=self.update_value, 
                            title="")
@@ -94,10 +97,11 @@ class DatePicker(TextInput):
 class CalendarWidget(RelativeLayout):
     """ Basic calendar widget """
     
-    def __init__(self, as_popup=False, *args, **kwargs):
+    def __init__(self, as_popup=False, touch_switch=False, *args, **kwargs):
         super(CalendarWidget, self).__init__(*args, **kwargs)
         
-        self.as_popup = as_popup     
+        self.as_popup = as_popup
+        self.touch_switch = touch_switch
         self.prepare_data()     
         self.init_ui()
         
@@ -246,6 +250,17 @@ class CalendarWidget(RelativeLayout):
                                   self.active_date[2])
         
         self.title_label.text = self.title
+        
+    def on_touch_move(self, touch):
+        """ Switch months pages by touch move """
+                
+        if self.touch_switch:
+            # Left - prev
+            if touch.dpos[0] < -30:
+                self.go_prev(None)
+            # Right - next
+            elif touch.dpos[0] > 30:
+                self.go_next(None)
         
 class ArrowButton(Button):
     pass
