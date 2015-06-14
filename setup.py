@@ -5,7 +5,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="KivyCalendar",
-    version="0.1.3",
+    version="0.1.2",
 
     author="Oleg Kozlov (xxblx)",
     author_email="xxblx.oleg@yandex.com",
