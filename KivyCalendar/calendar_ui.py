@@ -18,6 +18,8 @@ from kivy.uix.button import Button
 from kivy.uix.togglebutton import ToggleButton
 from kivy.uix.textinput import TextInput
 from kivy.uix.label import Label
+from kivy.core.window import Window
+from kivy.properties import NumericProperty, ReferenceListProperty
 
 import calendar_data as cal_data
 ###########################################################
@@ -61,8 +63,16 @@ Builder.load_string("""
 class DatePicker(TextInput):
     """ 
     Date picker is a textinput, if it focused shows popup with calendar
+    which allows you to define the popup dimensions using pHint_x, pHint_y, and the pHint lists
+    for example in kv 
+    DatePicker:
+        pHint: 0.7,0.4 
+    would result in a size_hint of 0.7,0.4 being used to create the popup
     """
-    
+    pHint_x = NumericProperty(0.0)
+    pHint_y = NumericProperty(0.0)
+    pHint = ReferenceListProperty(pHint_x ,pHint_y)
+
     def __init__(self, touch_switch=False, *args, **kwargs):
         super(DatePicker, self).__init__(*args, **kwargs)
         
@@ -83,9 +93,11 @@ class DatePicker(TextInput):
         self.bind(focus=self.show_popup)
         
     def show_popup(self, isnt, val):
-        """ Open popup if textinput focused """
-        
+        """ Open popup if textinput focused, and regardless update the popup size_hint"""
+        self.popup.size_hint=self.pHint        
         if val:
+            """Automatically dismiss the keyboard that results from the textInput"""
+            Window.release_all_keyboards()
             self.popup.open()
         
     def update_value(self, inst):
