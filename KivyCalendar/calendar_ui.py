@@ -21,7 +21,7 @@ from kivy.uix.label import Label
 from kivy.core.window import Window
 from kivy.properties import NumericProperty, ReferenceListProperty
 
-import calendar_data as cal_data
+from . import calendar_data as cal_data
 ###########################################################
 Builder.load_string("""
 <ArrowButton>:
