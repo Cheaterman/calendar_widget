@@ -15,3 +15,36 @@ pip install KivyCalendar
 Oleg Kozlov (xxblx)
 
 2015
+
+
+# July 19 - improvements (fherbine)
+
+KivyCalendar with improved CalendarWidget.
+
+Félix Herbinet (fherbine)
+
+2019
+
+## New design
+
+We can set `foreground_color` and `background_color`.
+- `foreground_color`: Basically fonts color.
+- `background_color`: Background color.
+
+## Active date is now a property:
+
+`active_date` is now considered as a property to be dispatch correctly.
+
+## New Screenmanager animation:
+
+`left` / `right` Screenmanager's animation are now reversed.
+
+## Better compatibility with Python3:
+
+- Uses of .format() methods.
+- PEP8 Compatible
+
+## Todos:
+
+- PEP257
+- Improvements on DatePicker

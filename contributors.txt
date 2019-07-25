@@ -4,3 +4,4 @@
 
 ## Some improvements
 * Anthony Lobko (amelius)
+* Félix Herbinet (fherbine)
