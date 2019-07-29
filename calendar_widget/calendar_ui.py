@@ -1,44 +1,33 @@
 '''
-Date Picker - Kivy Calendar
+Kivy Garden - Calendar Widget
 ====
 
-Calendar & Date Picker for Kivy based on KivyCalendar made by Oleg Kozlov
-This Calendar include a new UI, and properties handlers:
-
-- foreground_color: ListProperty to change the color of the text.
-- background_color: ListProperty to change the color of the background.
-
-- event_date: Getting the selected date.
-    based on Oleg's one it add an event dispatcher.
+Calendar for Kivy based on KivyCalendar made by Oleg Kozlov
 
 '''
 
-from kivy.core.window import Window
 from kivy.lang import Builder
 from kivy.properties import (
     ListProperty,
-    NumericProperty,
-    ReferenceListProperty,
+    StringProperty,
 )
+from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import ButtonBehavior
 from kivy.uix.gridlayout import GridLayout
+from kivy.uix.image import Image
 from kivy.uix.label import Label
-from kivy.uix.popup import Popup
 from kivy.uix.relativelayout import RelativeLayout
 from kivy.uix.screenmanager import (
     Screen,
     ScreenManager,
 )
-from kivy.uix.textinput import TextInput
 from kivy.uix.togglebutton import ToggleButtonBehavior
 
-from KivyCalendar import calendar_data as cal_data
+from . import calendar_data as cal_data
 
 
 Builder.load_string("""
-<CalendarWidget>:
-    background_color: 0, 0, 0, 1
-
+<Calendar>:
     canvas.before:
         Color:
             rgba: root.background_color
@@ -46,22 +35,41 @@ Builder.load_string("""
             size: self.size
 
 <ArrowButton>:
-    font_size: sp(21)
-    color: 1, 1, 1, 1
-    size_hint: .1, .1
+    pos_hint: {'center_y': .5}
+    size_hint: None, .65
+    width: self.height
+    opacity: 1 if self.state == 'normal' else .6
+
+<MonthYearHeader>:
+    text: ''
+    text_color: 1, 1, 1, 1
+    background_color: .4, .45, 1, 1
+    padding: dp(10), 0
+    pos_hint: {"top": 1, "center_x": .5}
+    size_hint_y: 0.1
 
     canvas.before:
         Color:
-            rgba: rgba('#ffffff44') if self.state == 'down' else (0, 0, 0, 0)
+            rgba: root.background_color
         Rectangle:
             pos: self.pos
             size: self.size
+
+    ArrowButton:
+        source: root.left_arrow_source
+        on_press: root.dispatch('on_arrow_left', root)
+
+    MonthYearLabel:
+        text: root.text
+
+    ArrowButton:
+        source: root.right_arrow_source
+        on_press: root.dispatch('on_arrow_right', root)
 
 <MonthYearLabel>:
     bold: True
     halign: "center"
     pos_hint: {"top": 1, "center_x": .5}
-    size_hint: None, 0.1
 
 <MonthsManager>:
     pos_hint: {"top": .9}
@@ -100,69 +108,80 @@ Builder.load_string("""
 """)
 
 
-class DatePicker(TextInput):
+class Calendar(RelativeLayout):
+    """Basic calendar widget.
+
+    :Class:`Calendar` is a calendar widget for kivy, use :attr:`active_date`
+    to get the result of your date selection.
     """
-    Date picker is a textinput, if it focused shows popup with calendar
-    which allows you to define the popup dimensions using pHint_x, pHint_y,
-    and the pHint lists, for example in kv:
-    DatePicker:
-        pHint: 0.7,0.4
-    would result in a size_hint of 0.7,0.4 being used to create the popup
-    """
-    pHint_x = NumericProperty(0.0)
-    pHint_y = NumericProperty(0.0)
-    pHint = ReferenceListProperty(pHint_x, pHint_y)
-
-    def __init__(self, touch_switch=False, *args, **kwargs):
-        super(DatePicker, self).__init__(*args, **kwargs)
-
-        self.touch_switch = touch_switch
-        self.init_ui()
-
-    def init_ui(self):
-
-        self.text = cal_data.today_date()
-        # Calendar
-        self.cal = CalendarWidget(as_popup=True,
-                                  touch_switch=self.touch_switch)
-        # Popup
-        self.popup = Popup(content=self.cal, on_dismiss=self.update_value,
-                           title="")
-        self.cal.parent_popup = self.popup
-
-        self.bind(focus=self.show_popup)
-
-    def show_popup(self, isnt, val):
-        """
-        Open popup if textinput focused,
-        and regardless update the popup size_hint
-        """
-        self.popup.size_hint = self.pHint
-        if val:
-            # Automatically dismiss the keyboard
-            # that results from the textInput
-            Window.release_all_keyboards()
-            self.popup.open()
-
-    def update_value(self, inst):
-        """ Update textinput value on popup close """
-
-        self.text = "%s.%s.%s" % tuple(self.cal.active_date)
-        self.focus = False
-
-
-class CalendarWidget(RelativeLayout):
-    """ Basic calendar widget """
 
     # logic
     active_date = ListProperty()
+    """Selected date.
+
+    :attr:`active_date` is a :class:`ListProperty` wich contains the selected
+    date as: [date, month, year]
+    """
+
+    locale = StringProperty()
+    """Locale date formatting setting.
+
+    :attr:`locale` -- change the default locale used by the :class:`Calendar`.
+    If :attr:`locale` is default, '', locale will be you're system default.
+
+    :attr:`locale` is a :class:`StringProperty` and default is ''.
+    """
 
     # design
-    background_color = ListProperty([0, 0, 0, 1])
-    foreground_color = ListProperty([1, 1, 1, 1])
+    background_color = ListProperty([1, 1, 1, 1])
+    """Color for the background.
+
+    :attr:`background_color` -- to change the color of the main background.
+
+    :attr: `background_color` is a :class:`ListProperty` and default is
+    [1, 1, 1, 1].
+    """
+
+    foreground_color = ListProperty([0, 0, 0, 1])
+    """Color for the foreground.
+
+    :attr:`foreground_color` -- to change the color of the main label.
+
+    :attr: `foreground_color` is a :class:`ListProperty` and default is
+    [0, 0, 0, 1].
+    """
+
+    header_color = ListProperty([.4, .45, 1, 1])
+    """Color for the header's background.
+
+    :attr:`header_color` -- to change the color of the header's background.
+
+    :attr: `header_color` is a :class:`ListProperty` and default is
+    [.4, .45, 1, 1].
+    """
+
+    left_arrow_source = StringProperty('calendar_widget/icons/left_arrow.png')
+    """Left arrow Image.
+
+    :attr:`left_arrow_source` -- to change the default left arrow image path.
+
+    :attr:`left_arrow_source` is a :class:`ListProperty` and default is
+    'calendar_widget/icons/left_arrow.png'.
+    """
+
+    right_arrow_source = StringProperty(
+        'calendar_widget/icons/right_arrow.png',
+    )
+    """Right arrow Image.
+
+    :attr:`right_arrow_source` -- to change the default right arrow image path.
+
+    :attr:`right_arrow_source` is a :class:`ListProperty` and default is
+    'calendar_widget/icons/right_arrow.png'.
+    """
 
     def __init__(self, as_popup=False, touch_switch=False, *args, **kwargs):
-        super(CalendarWidget, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         self.as_popup = as_popup
         self.touch_switch = touch_switch
@@ -171,26 +190,16 @@ class CalendarWidget(RelativeLayout):
 
     def init_ui(self):
 
-        self.left_arrow = ArrowButton(
-            text="<", on_press=self.go_prev,
-            pos_hint={"top": 1, "left": 0},
-        )
-        self.bind(foreground_color=self.left_arrow.setter('color'))
-
-        self.right_arrow = ArrowButton(
-            text=">", on_press=self.go_next,
-            pos_hint={"top": 1, "right": 1},
-        )
-        self.bind(foreground_color=self.right_arrow.setter('color'))
-
-        self.add_widget(self.left_arrow)
-        self.add_widget(self.right_arrow)
-
         # Title
-        self.title_label = MonthYearLabel(
+        self.title_label = MonthYearHeader(
             text=self.title,
+            left_arrow_source=self.left_arrow_source,
+            right_arrow_source=self.right_arrow_source,
+            on_arrow_left=self.go_prev,
+            on_arrow_right=self.go_next,
         )
-        self.bind(foreground_color=self.title_label.setter('color'))
+        self.bind(foreground_color=self.title_label.setter('text_color'))
+        self.bind(header_color=self.title_label.setter('background_color'))
         self.add_widget(self.title_label)
 
         # ScreenManager
@@ -255,9 +264,9 @@ class CalendarWidget(RelativeLayout):
         """ Prepare data for showing on widget loading """
 
         # Get days abbrs and month names lists
-        self.month_names = cal_data.get_month_names()
+        self.month_names = cal_data.get_month_names(locale=self.locale)
         self.month_names_eng = cal_data.get_month_names_eng()
-        self.days_abrs = cal_data.get_days_abbrs()
+        self.days_abrs = cal_data.get_days_abbrs(locale=self.locale)
 
         # Today date
         self.active_date = cal_data.today_date_list()
@@ -271,12 +280,20 @@ class CalendarWidget(RelativeLayout):
         self.get_quarter()
 
     def get_quarter(self):
-        """ Get caledar and months/years nums for quarter """
+        """ Get calendar and months/years nums for quarter """
 
-        self.quarter_nums = cal_data.calc_quarter(self.active_date[2],
-                                                  self.active_date[1])
-        self.quarter = cal_data.get_quarter(self.active_date[2],
-                                            self.active_date[1])
+        current_month = self.active_date[1]
+        current_year = self.active_date[2]
+
+        self.quarter_nums = cal_data.calc_quarter(
+            current_year,
+            current_month,
+        )
+
+        self.quarter = cal_data.get_quarter(
+            current_year,
+            current_month,
+        )
 
     def get_btn_value(self, inst):
         """ Get day value from pressed button """
@@ -287,7 +304,7 @@ class CalendarWidget(RelativeLayout):
         if self.as_popup:
             self.parent_popup.dismiss()
 
-    def go_prev(self, inst):
+    def go_prev(self, *args):
         """ Go to screen with previous month """
 
         # Change active date
@@ -316,7 +333,7 @@ class CalendarWidget(RelativeLayout):
 
         self.title_label.text = self.title
 
-    def go_next(self, inst):
+    def go_next(self, *args):
         """ Go to screen with next month """
 
         # Change active date
@@ -357,20 +374,32 @@ class CalendarWidget(RelativeLayout):
                 self.go_next(None)
 
 
-class LabelButton(ButtonBehavior, Label):
-    pass
-
-
 class LabelToggleButton(ToggleButtonBehavior, Label):
     pass
 
 
-class ArrowButton(LabelButton):
+class ArrowButton(ButtonBehavior, Image):
     pass
 
 
 class MonthYearLabel(Label):
     pass
+
+
+class MonthYearHeader(BoxLayout):
+    __events__ = ('on_arrow_left', 'on_arrow_right',)
+
+    left_arrow_source = StringProperty('KivyCalendar/icons/left_arrow.png')
+    right_arrow_source = StringProperty('KivyCalendar/icons/right_arrow.png')
+    text = StringProperty()
+    text_color = ListProperty()
+    background_color = ListProperty()
+
+    def on_arrow_left(self, *args):
+        pass
+
+    def on_arrow_right(self, *args):
+        pass
 
 
 class MonthsManager(ScreenManager):
