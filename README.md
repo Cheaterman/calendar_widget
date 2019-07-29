@@ -3,6 +3,7 @@ Kivy Garden - Calendar Widget
 
 This Widget is based on [Oleg Kozlov (xxblx) work](https://bitbucket.org/xxblx/kivycalendar/).
 
+![Calendar](./example/calendar.png)
 
 Install
 --------
