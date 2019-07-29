@@ -7,7 +7,7 @@ from setuptools import setup
 from io import open
 from os import path
 
-from kivy_garden.flower import __version__
+from calendar_widget import __version__
 
 here = path.abspath(path.dirname(__file__))
 
@@ -17,7 +17,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 URL = 'https://github.com/kivy-garden/calendar_widget'
 
 setup(
-    name='kivy_garden.calendar_widget',
+    name='calendar_widget',
     version=__version__,
     description='A calendar widget for Kivy.',
     long_description=long_description,
@@ -36,7 +36,7 @@ setup(
     ],
     keywords='Kivy kivy-garden calendar_widget',
 
-    packages=['kivy_garden.calendar_widget'],
+    packages=['calendar_widget'],
     install_requires=[],
     extras_require={
         'dev': ['pytest>=3.6', 'wheel', 'pytest-cov', 'pycodestyle'],
