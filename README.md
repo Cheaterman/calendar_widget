@@ -1,50 +1,96 @@
-# KivyCalendar
+Kivy Garden - Calendar Widget
+=============================
 
-KivyCalendar is module with additional widgets for [Kivy](http://kivy.org/): CalendarWidget and DatePicker. 
-
-**CalendarWidget** based on RelativeLayout. It allow to switch months by buttons in left-top and right-top widget's corners. 
-
-![CalendarWidget](https://lh5.googleusercontent.com/-jX3AJQrONFY/VPkMU9cQ6zI/AAAAAAAAAtU/tfkGrXZRvIg/s1600/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA-My-1.png)
-
-**DatePicker** based on TextInput. When textinput field focused shows popup with CalendarWidget. Once data selected popup dismiss and selected date puts into textinput field. 
-
-```
-pip install KivyCalendar
-```
-
-Oleg Kozlov (xxblx)
-
-2015
+This Widget is based on [Oleg Kozlov (xxblx) work](https://bitbucket.org/xxblx/kivycalendar/).
 
 
-# July 19 - improvements (fherbine)
+Install
+--------
 
-KivyCalendar with improved CalendarWidget.
+`garden install calendar_widget`
+
+#### Usage
+
+Import the module with the following instruction:
+`from kivy.garden.calendar_widget import Calendar`
+
+And you'll be able to use the `Calendar` widget.
+
+See [example](./example/) for more infos.
+
+
+TODO
+-------
+
+- Place it in the Garden for real !
+- PEP257 & better doc !
+- Add a selection_color Property
+- DatePicker
+
+
+License
+--------
+
+Please check [COPYING](./COPYING) file for the KivyCalendar project,
+the [LICENSE](./LICENSE.txt) was generated for the garden.
+
+History
+---------
+
+#### March 2015 - Genesis Oleg Kozlov (xxblx)
+
+Oleg Kozlov created the first version of KivyCalendar.
+
+#### June 2015 - improvements (amelius)
+
+Merged Pull Request from Anthony Lobko.
+
+#### August 2018 - improvements (alfred richardsn)
+
+Merged Pull Request from alfred richardsn.
+
+#### July 2019 - improvements (fherbine)
+
+KivyCalendar placed into kivy.garden as calendar_widget with a refactor on
+Calendar Widget.
 
 Félix Herbinet (fherbine)
 
 2019
 
-## New design
+##### New design -- CalendarWidget
 
 We can set `foreground_color` and `background_color`.
-- `foreground_color`: Basically fonts color.
-- `background_color`: Background color.
+- `foreground_color`: ListProperty -- Basically fonts color.
+- `background_color`: ListProperty -- Background color.
+- `header_color`: ListProperty -- color for the month & year header labels.
 
-## Active date is now a property:
+Top arrows are considered as images and there sources can be change, with
+the following properties:
+- `left_arrow_source`: StringProperty -- path for the left arrow.
+- `right_arrow_source`: StringProperty -- path for the right arrow.
+
+##### Active date is now a property
 
 `active_date` is now considered as a property to be dispatch correctly.
 
-## New Screenmanager animation:
+##### Locale is also a property
+
+`locale` is use to change default system's locale for the widget.
+
+##### New Screenmanager animation
 
 `left` / `right` Screenmanager's animation are now reversed.
 
-## Better compatibility with Python3:
+##### Better compatibility with Python3
 
+- Temporary re-implemented class TimeEncoding() -- Python3 deprecated,
+  to run correctly.
+- Then fixing usage of locale for time formatting.
 - Uses of .format() methods.
-- PEP8 Compatible
+- Shortening and explicinting functions and methods.
+- PEP8 Compatible.
 
-## Todos:
+##### Placed on Kivy Garden
 
-- PEP257
-- Improvements on DatePicker
+
