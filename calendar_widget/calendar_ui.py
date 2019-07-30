@@ -6,9 +6,12 @@ Calendar for Kivy based on KivyCalendar made by Oleg Kozlov
 
 '''
 
+from kivy.core.window import Window
 from kivy.lang import Builder
 from kivy.properties import (
     ListProperty,
+    NumericProperty,
+    ReferenceListProperty,
     StringProperty,
 )
 from kivy.uix.boxlayout import BoxLayout
@@ -16,11 +19,13 @@ from kivy.uix.button import ButtonBehavior
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.image import Image
 from kivy.uix.label import Label
+from kivy.uix.popup import Popup
 from kivy.uix.relativelayout import RelativeLayout
 from kivy.uix.screenmanager import (
     Screen,
     ScreenManager,
 )
+from kivy.uix.textinput import TextInput
 from kivy.uix.togglebutton import ToggleButtonBehavior
 
 from . import calendar_data as cal_data
@@ -106,6 +111,59 @@ Builder.load_string("""
     # Useful to set a specific UI to week ends' Day buttons
 
 """)
+
+
+class DatePicker(TextInput):
+    """
+    Date picker is a textinput, if it focused shows popup with calendar
+    which allows you to define the popup dimensions using pHint_x, pHint_y,
+    and the pHint lists, for example in kv:
+    DatePicker:
+        pHint: 0.7,0.4
+    would result in a size_hint of 0.7,0.4 being used to create the popup
+    """
+    pHint_x = NumericProperty(0.0)
+    pHint_y = NumericProperty(0.0)
+    pHint = ReferenceListProperty(pHint_x, pHint_y)
+
+    def __init__(self, touch_switch=False, *args, **kwargs):
+        super(DatePicker, self).__init__(*args, **kwargs)
+
+        self.touch_switch = touch_switch
+        self.init_ui()
+
+    def init_ui(self):
+
+        self.text = cal_data.today_date()
+        # Calendar
+        self.cal = Calendar(
+            as_popup=True,
+            touch_switch=self.touch_switch,
+        )
+        # Popup
+        self.popup = Popup(content=self.cal, on_dismiss=self.update_value,
+                           title="")
+        self.cal.parent_popup = self.popup
+
+        self.bind(focus=self.show_popup)
+
+    def show_popup(self, isnt, val):
+        """
+        Open popup if textinput focused,
+        and regardless update the popup size_hint
+        """
+        self.popup.size_hint = self.pHint
+        if val:
+            # Automatically dismiss the keyboard
+            # that results from the textInput
+            Window.release_all_keyboards()
+            self.popup.open()
+
+    def update_value(self, inst):
+        """ Update textinput value on popup close """
+
+        self.text = "%s.%s.%s" % tuple(self.cal.active_date)
+        self.focus = False
 
 
 class Calendar(RelativeLayout):
