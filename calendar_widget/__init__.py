@@ -3,4 +3,4 @@
 
 __version__ = '1.0'
 
-from .calendar_ui import Calendar # noqa
+from .calendar_ui import Calendar, DatePicker # noqa
