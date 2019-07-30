@@ -218,7 +218,7 @@ class Calendar(RelativeLayout):
     [.4, .45, 1, 1].
     """
 
-    left_arrow_source = StringProperty('calendar_widget/icons/left_arrow.png')
+    left_arrow_source = StringProperty('icons/left_arrow.png')
     """Left arrow Image.
 
     :attr:`left_arrow_source` -- to change the default left arrow image path.
@@ -227,9 +227,7 @@ class Calendar(RelativeLayout):
     'calendar_widget/icons/left_arrow.png'.
     """
 
-    right_arrow_source = StringProperty(
-        'calendar_widget/icons/right_arrow.png',
-    )
+    right_arrow_source = StringProperty('icons/right_arrow.png')
     """Right arrow Image.
 
     :attr:`right_arrow_source` -- to change the default right arrow image path.
