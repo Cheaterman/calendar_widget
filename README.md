@@ -26,7 +26,7 @@ TODO
 - Place it in the Garden for real !
 - PEP257 & better doc !
 - Add a selection_color Property
-- DatePicker
+- DatePicker - improvements
 
 
 License
