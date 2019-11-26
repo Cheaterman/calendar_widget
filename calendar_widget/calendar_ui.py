@@ -244,6 +244,17 @@ class Calendar(RelativeLayout):
         self.prepare_data()
         self.init_ui()
 
+    def reset_widget(self):
+        """Only use this method if you want to use another default date.
+
+        Example:
+        >>> cal = Calandar() #active_date will be now()
+        >>> cal.active_date = [05, 02, 1999] #New default date
+        >>> cal.reset_widget() # destroy ui & redraw
+        """
+        self.clear_widgets()
+        self.init_ui()
+
     def init_ui(self):
 
         # Title
