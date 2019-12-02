@@ -253,6 +253,11 @@ class Calendar(RelativeLayout):
         >>> cal.reset_widget() # destroy ui & redraw
         """
         self.clear_widgets()
+        self.title = "{month} {year}".format(
+            month=self.month_names[self.active_date[1] - 1],
+            year=self.active_date[2],
+        )
+        self.get_quarter()
         self.init_ui()
 
     def init_ui(self):
