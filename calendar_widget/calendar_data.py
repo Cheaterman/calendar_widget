@@ -8,13 +8,17 @@ from calendar import (
     monthrange,
 )
 from datetime import datetime
-from locale import getdefaultlocale
+from locale import getdefaultlocale, normalize
 import locale as _locale
 
 
 class TimeEncoding:
     def __init__(self, locale):
-        self.locale = locale
+        self.locale = self.normalize(locale) if locale else getdefaultlocale()
+
+    def normalize(self, locale):
+        locale, _ = normalize(locale).split('.', 1)
+        return locale, 'UTF8'
 
     def __enter__(self):
         self.oldlocale = _locale.getlocale(_locale.LC_TIME)
@@ -31,9 +35,6 @@ def get_month_names(locale=''):
     locale -- locale timezone, if not set, the function will take the default
     locale of your system.
     """
-
-    locale = locale + '.UTF-8' if locale else '%s.%s' % getdefaultlocale()
-
     try:
         with TimeEncoding(locale):
             result = [month.capitalize() for month in month_name if month]
@@ -55,13 +56,11 @@ def get_month_names_eng():
 def get_days_abbrs(locale=''):
     """ Return list with days abbreviations """
 
-    locale = locale + '.UTF-8' if locale else '%s.%s' % getdefaultlocale()
-
     try:
         with TimeEncoding(locale):
             result = list(day_abbr)
     except Exception:
-        result.list(day_abbr)
+        result = list(day_abbr)
 
     return result
 
