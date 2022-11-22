@@ -375,7 +375,6 @@ class Calendar(RelativeLayout):
         """ Get day value from pressed button """
 
         self.active_date[0] = int(inst.text)
-        self.property('active_date').dispatch(self)
 
         if self.as_popup:
             self.parent_popup.dismiss()
