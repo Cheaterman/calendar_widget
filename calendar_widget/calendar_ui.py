@@ -341,7 +341,7 @@ class Calendar(RelativeLayout):
 
         # Get days abbrs and month names lists
         self.month_names = cal_data.get_month_names(locale=self.locale)
-        self.month_names_eng = cal_data.get_month_names_eng()
+        self.month_names_eng = cal_data.get_month_names(locale='en')
         self.days_abrs = cal_data.get_days_abbrs(locale=self.locale)
 
         # Today date

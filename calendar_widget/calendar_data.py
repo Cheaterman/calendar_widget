@@ -39,16 +39,8 @@ def get_month_names(locale=''):
         with TimeEncoding(locale):
             result = [month.capitalize() for month in month_name if month]
 
-        return result
-
     except Exception:
-        return get_month_names_eng()
-
-
-def get_month_names_eng():
-    """In case if get_month_names() method has failed."""
-
-    result = list(month_name)
+        result = month_name[1:]
 
     return result
 
