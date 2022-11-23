@@ -344,8 +344,10 @@ class Calendar(RelativeLayout):
         self.month_names_eng = cal_data.get_month_names(locale='en')
         self.days_abrs = cal_data.get_days_abbrs(locale=self.locale)
 
-        # Today date
-        self.active_date = cal_data.today_date_list()
+        if not self.active_date:
+            # Today date
+            self.active_date = cal_data.today_date_list()
+
         # Set title
         self.title = "{month} {year}".format(
             month=self.month_names[self.active_date[1] - 1],
