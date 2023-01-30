@@ -393,9 +393,10 @@ class Calendar(RelativeLayout):
             for day in week
             if day[2]
         ))
+        selected_day = min(self.active_date[0], max_day)
 
         # Change active date
-        self.active_date = [max_day, self.quarter_nums[0][1],
+        self.active_date = [selected_day, self.quarter_nums[0][1],
                             self.quarter_nums[0][0]]
 
         # Name of prev screen
@@ -409,8 +410,10 @@ class Calendar(RelativeLayout):
         if not self.screenmanager.has_screen(prev_scr_name):
             self.create_month_screen(self.quarter[0])
 
+        old_screen = self.screenmanager.current_screen
         self.screenmanager.current = prev_scr_name
         self.screenmanager.transition.direction = "right"
+        self.screenmanager.remove_widget(old_screen)
 
         self.get_quarter()
         self.title = "{month} {year}".format(
@@ -428,9 +431,10 @@ class Calendar(RelativeLayout):
             for day in week
             if day[2]
         ))
+        selected_day = min(self.active_date[0], max_day)
 
         # Change active date
-        self.active_date = [max_day, self.quarter_nums[2][1],
+        self.active_date = [selected_day, self.quarter_nums[2][1],
                             self.quarter_nums[2][0]]
 
         # Name of prev screen
@@ -444,8 +448,10 @@ class Calendar(RelativeLayout):
         if not self.screenmanager.has_screen(next_scr_name):
             self.create_month_screen(self.quarter[2])
 
+        old_screen = self.screenmanager.current_screen
         self.screenmanager.current = next_scr_name
         self.screenmanager.transition.direction = "left"
+        self.screenmanager.remove_widget(old_screen)
 
         self.get_quarter()
         self.title = "{month} {year}".format(
