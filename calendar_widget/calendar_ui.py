@@ -282,9 +282,9 @@ class Calendar(RelativeLayout):
         self.screenmanager = MonthsManager()
         self.add_widget(self.screenmanager)
 
-        self.create_month_screen(self.quarter[1], toogle_today=True)
+        self.create_month_screen(self.quarter[1])
 
-    def create_month_screen(self, month, toogle_today=False):
+    def create_month_screen(self, month):
         """ Screen with calendar for one month """
 
         screen = Screen()
@@ -321,10 +321,10 @@ class Calendar(RelativeLayout):
                 day_button.bind(on_press=self.get_btn_value)
                 day_button.color = self.foreground_color
 
-                if toogle_today:
-                    # Down today button
-                    if day[0] == self.active_date[0] and day[2] == 1:
-                        day_button.state = "down"
+                # Down today button
+                if day[0] == self.active_date[0] and day[2] == 1:
+                    day_button.state = "down"
+
                 # Disable + red colored buttons with days from other months
                 if day[2] == 0:
                     day_button.disabled = True
@@ -383,9 +383,15 @@ class Calendar(RelativeLayout):
 
     def go_prev(self, *args):
         """ Go to screen with previous month """
+        max_day = max((
+            day[0]
+            for week in self.quarter[0]
+            for day in week
+            if day[2]
+        ))
 
         # Change active date
-        self.active_date = [self.active_date[0], self.quarter_nums[0][1],
+        self.active_date = [max_day, self.quarter_nums[0][1],
                             self.quarter_nums[0][0]]
 
         # Name of prev screen
@@ -412,9 +418,15 @@ class Calendar(RelativeLayout):
 
     def go_next(self, *args):
         """ Go to screen with next month """
+        max_day = max((
+            day[0]
+            for week in self.quarter[2]
+            for day in week
+            if day[2]
+        ))
 
         # Change active date
-        self.active_date = [self.active_date[0], self.quarter_nums[2][1],
+        self.active_date = [max_day, self.quarter_nums[2][1],
                             self.quarter_nums[2][0]]
 
         # Name of prev screen
@@ -466,8 +478,8 @@ class MonthYearLabel(Label):
 class MonthYearHeader(BoxLayout):
     __events__ = ('on_arrow_left', 'on_arrow_right',)
 
-    left_arrow_source = StringProperty('KivyCalendar/icons/left_arrow.png')
-    right_arrow_source = StringProperty('KivyCalendar/icons/right_arrow.png')
+    left_arrow_source = StringProperty()
+    right_arrow_source = StringProperty()
     text = StringProperty()
     text_color = ListProperty()
     background_color = ListProperty()
