@@ -274,8 +274,12 @@ class Calendar(RelativeLayout):
             on_arrow_left=self.go_prev,
             on_arrow_right=self.go_next,
         )
-        self.bind(foreground_color=self.title_label.setter('text_color'))
-        self.bind(header_color=self.title_label.setter('background_color'))
+        self.bind(
+            foreground_color=self.title_label.setter('text_color'),
+            header_color=self.title_label.setter('background_color'),
+            left_arrow_source=self.title_label.setter('left_arrow_source'),
+            right_arrow_source=self.title_label.setter('right_arrow_source'),
+        )
         self.add_widget(self.title_label)
 
         # ScreenManager
